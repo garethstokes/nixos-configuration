@@ -1,0 +1,76 @@
+Config {
+  -- Set font and default foreground/background colors. Note that
+  -- the height of xmobar is controlled by the font you use.
+  font = "xft:liberationmono:size=9",
+  bgColor = "#1d1f21",
+  fgColor = "#c5c8c6",
+
+  border = BottomB,
+  borderColor = "black"
+
+  -- Position is top left, taking up 100% of screen.
+  -- You are likely to have to tweak the width here based on the width
+  -- of your screen to make it play nicely with stalonetray, which we
+  -- want to be taking up the remainer of the space on the right side
+  -- of your screen.
+  position = TopW L 100,
+
+  -- list of commands which gather information about your system for
+  -- presentation in the bar.
+  commands = [
+	  -- Gather and format CPU usage information.
+	  -- If it's above 50%, we consider it high usage and make it red.
+	  Run Cpu [
+	    "-L", "3",
+	    "-H", "50",
+	    "--normal", "green",
+	    "--high","red"
+	  ]
+	  10,
+
+	  Run Network "wlp2s0" 
+      [ "-L"
+      ,"0" 
+      ,"-H"
+      ,"32"
+      ,"--normal"
+      ,"green"
+      ,"--high"
+      ,"red"] 10,
+
+	  -- Gather and format memory usage information
+	  Run Memory [
+	    "-t","Mem: <usedratio>%"
+	  ] 10,
+
+	  -- Date formatting
+	  Run Date "%b %A %d %k:%M:%S" "date" 10,
+
+	  -- Battery information. This is likely to require some customization
+	  -- based upon your specific hardware. Or, for a desktop you may want
+	  -- to just remove this section entirely.
+	  Run Battery [
+	    "-t", "Battery <left>%",
+	    "--",
+	    --"-c", "charge_full",
+	    "-O", "AC",
+	    "-o", "Bat",
+	    "-h", "green",
+	    "-l", "red"
+	  ] 
+    10,
+
+	  Run StdinReader
+  ],
+
+  -- Separator character used to wrape variables in the xmobar template
+  sepChar = "%",
+
+  -- Alignment separater characer used in the xmobar template. Everything
+  -- before this will be aligned left, everything after aligned right.
+  alignSep = "}{",
+
+  -- Overall template for the layout of the xmobar contents. Note that
+  -- space is significant and can be used to add padding.
+  template = "%StdinReader% }{ %wlp2s0% | %battery% | %cpu% | %memory% | <fc=#e6744c>%date%</fc>"
+}
