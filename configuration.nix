@@ -16,9 +16,7 @@ let
 in
 {
   imports =
-    [ <nixos-hardware/lenovo/thinkpad/x1-extreme/gen2>
-
-      # Include the results of the hardware scan.
+    [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -36,6 +34,7 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = unstable.linuxPackages_latest;
+  boot.kernelParams = [ "nomodeset" ];
 
   networking.hostName = "bandit"; # Define your hostname.
 
@@ -131,21 +130,6 @@ in
   hardware.pulseaudio.package = pkgs.pulseaudioFull;
 
 
-  hardware = {
-    nvidia = {
-      prime = {
-        sync.enable = true;
-        nvidiaBusId = "PCI:1:0:0";
-        intelBusId = "PCI:0:2:0";
-      };
-    };
-    opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-  };
-
   services.autorandr.enable = true;
 
   services.xserver = {
@@ -154,7 +138,7 @@ in
     xkbOptions = "eurosign:e";
 
     # Video
-    videoDrivers = [ "intel" "displaylink" "modesetting" ];
+    videoDrivers = [ "nvidia" "displaylink" "modesetting" ];
 
     libinput = {
       enable = true;
