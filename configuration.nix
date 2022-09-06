@@ -3,156 +3,235 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
+let
+  unstableGitRepo = {
+    name = "nixos-unstable-2022-08-08";
+    url = "https://github.com/nixos/nixpkgs/";
+    # `git ls-remote https://github.com/nixos/nixpkgs nixos-unstable`
+    ref = "refs/heads/nixos-unstable";
+    rev = "f44884060cb94240efbe55620f38a8ec8d9af601";
+  };
 
+  unstable = import (fetchGit unstableGitRepo) { config.allowUnfree = true; };
+in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [ <nixos-hardware/lenovo/thinkpad/x1-extreme/gen2>
+
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub = {
-    enable = true;
-    version = 2;
-    device = "/dev/sda";
+  nixpkgs.config.allowUnfree = true;
+
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+    trustedUsers = [ "root" "gareth" ];
   };
 
-  networking = {
-    hostName = "hax0r";
-    wireless.enable = true;
-  };
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = unstable.linuxPackages_latest;
+
+  networking.hostName = "bandit"; # Define your hostname.
+
+  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+  # Per-interface useDHCP will be mandatory in the future, so this generated config
+  # replicates the default behaviour.
+  networking.useDHCP = false;
+  networking.interfaces.enp0s31f6.useDHCP = true;
+  networking.interfaces.wlp82s0.useDHCP = true;
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n = {
-    consoleKeyMap = "us";
     defaultLocale = "en_US.UTF-8";
+  };
+
+  fonts.fonts = with pkgs; [
+    fira-code
+    fira-code-symbols
+  ];
+
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "us";
   };
 
   # Set your time zone.
   time.timeZone = "Australia/Sydney";
 
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; [
-    wget
-    vim
-    neovim
-    gitAndTools.gitFull
-    iptables nmap tcpdump
-    rxvt_unicode
-    zlib
-    bc
-    unzip
-    zsh
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment = {
+    variables = {
+      EDITOR = "vim";
+    };
 
-    chromium
-    firefoxWrapper
+    systemPackages = with pkgs; [
+      wget
 
-    gcc
-    binutils
+      # basic vim base install
+      (neovim.override {
+        vimAlias = true;
+        configure = {
+          packages.myPlugins = with pkgs.vimPlugins; {
+            start = [ vim-lastplace vim-nix ]; 
+            opt = [];
+          };
+          customRC = ''
+            set expandtab|retab
+            set tabstop=2
+            set shiftwidth=2
+            set list
+            set nu
+            set colorcolumn=80
+            set mouse=a
+            syntax enable
+          '';
+        };
+      })
 
-    xfontsel
-    xlsfonts
-    xscreensaver
-  ] ++ (with haskellPackages; [
-    ghc
-    xmobar
-    xmonad
-    xmonad-contrib
-    xmonad-extras
-  ]);
+      # gnome extentions
+      gnomeExtensions.frippery-applications-menu
+    ];
 
-  nixpkgs.config = {
-    allowUnfree = true;
-   
-    chromium = {
-      enablePepperFlash = true;
-      enablePepperPDF = true;
+    gnome = {
+      excludePackages = (with pkgs; [
+        gnome-photos
+        gnome-tour
+      ]) ++ (with pkgs.gnome; [
+        cheese # webcam tool
+        gnome-music
+        gnome-terminal
+        gedit # text editor
+        epiphany # web browser
+        geary # email reader
+        evince # document viewer
+        gnome-characters
+        totem # video player
+        tali # poker game
+        iagno # go game
+        hitori # sudoku game
+        atomix # puzzle game
+      ]);
     };
   };
 
-  programs = {
-    bash.enableCompletion = true;
-    zsh.enable = true;
+  # Enable sound.
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.package = pkgs.pulseaudioFull;
+
+
+  hardware = {
+    nvidia = {
+      prime = {
+        sync.enable = true;
+        nvidiaBusId = "PCI:1:0:0";
+        intelBusId = "PCI:0:2:0";
+      };
+    };
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
   };
 
-  environment.sessionVariables = {
-    EDITOR = "nvim";
-    NIXPKGS_ALLOW_UNFREE = "1";
+  services.autorandr.enable = true;
 
-    shells = [
-      "${pkgs.zsh}/bin/zsh"
-    ];
-  };
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
     layout = "us";
-    
-    windowManager = {
-      xmonad.enable = true;
-      xmonad.enableContribAndExtras = true;
-      default = "xmonad";
-    };
+    xkbOptions = "eurosign:e";
 
-    desktopManager = {
-      xterm.enable = true;
-      default = "none";
-    };
+    # Video
+    videoDrivers = [ "intel" "displaylink" "modesetting" ];
 
-    displayManager = {
-      slim = {
-        enable = true;
-        defaultUser = "gareth";
-	theme = pkgs.fetchurl {
-	  url = "https://github.com/edwtjo/nixos-black-theme/archive/v1.0.tar.gz";
-	  sha256 = "13bm7k3p6k7yq47nba08bn48cfv536k4ipnwwp1q1l2ydlp85r9d";
-	  };
+    libinput = {
+      enable = true;
+
+      touchpad = {
+        # enables tap-to-click behavior
+        tapping = true;
+
+        naturalScrolling = true;
+
+        # both button pressed will emulate a middle button click
+        middleEmulation = true;
       };
     };
 
-  };
+    # Enable the Gnome Desktop Environment.
+    displayManager = {
+      defaultSession = "gnome";
+      gdm = {
+        enable = true;
+        wayland = true;
+      };
+      autoLogin = {
+        enable = true;
+        user = "gareth";
+      };
+    };
 
-  services.postgresql.enable = true;
-
-  fonts = {
-    enableFontDir = true;
-    enableGhostscriptFonts = true;
-    fonts = with pkgs; [
-      anonymousPro
-      corefonts
-      dejavu_fonts
-      font-droid
-      freefont_ttf
-      google-fonts
-      inconsolata
-      liberation_ttf
-      powerline-fonts
-      source-code-pro
-      terminus_font
-      ttf_bitstream_vera
-      ubuntu_font_family
-    ];
+    desktopManager.gnome = {
+      enable = true;
+    };
   };
 
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.extraUsers.gareth = {
-    isNormalUser = true;
-    uid = 1000;
-    name = "gareth";
-    extraGroups = [ "wheel" "disk" "audio" "video" "networkmanager" "systemd-journal" ];
-    createHome = true;
-    home = "/home/gareth";
+  users = {
+    defaultUserShell = pkgs.zsh;
+    users.gareth = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    };
   };
 
-  security.sudo.enable = true;
+  # PostgreSQL server for development purposes.
+  # Accepts connections on 127.0.0.1 with "postgres" user
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_10;
+    authentication = pkgs.lib.mkForce ''
+      # TYPE  DATABASE        USER            ADDRESS                 METHOD
+      local   all             all                                     trust
+      host    all             all             127.0.0.1/32            trust
+      host    all             all             ::1/128                 trust
+    '';
+    initialScript = pkgs.writeText "backend-initScript" ''
+      CREATE ROLE gareth WITH SUPERUSER;
+    '';
+  };
 
-  # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "17.03";
+  # Docker
+  virtualisation.docker.enable = true;
+
+  # adjust screen brightness
+  programs.light.enable = true;
+
+  # Power
+  services.power-profiles-daemon.enable = false;
+  services.logind = {
+    lidSwitch = "ignore";
+  };
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "20.03"; # Did you read the comment?
 
 }
