@@ -33,7 +33,7 @@
   hardware.enableRedistributableFirmware = true;
 
   hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
     modesetting.enable = true;
     powerManagement.enable = true;
     prime = {
