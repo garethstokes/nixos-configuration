@@ -3,17 +3,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
-let
-  unstableGitRepo = {
-    name = "nixos-unstable-2022-08-08";
-    url = "https://github.com/nixos/nixpkgs/";
-    # `git ls-remote https://github.com/nixos/nixpkgs nixos-unstable`
-    ref = "refs/heads/nixos-unstable";
-    rev = "f44884060cb94240efbe55620f38a8ec8d9af601";
-  };
-
-  unstable = import (fetchGit unstableGitRepo) { config.allowUnfree = true; };
-in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -27,27 +16,33 @@ in
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-    trustedUsers = [ "root" "gareth" ];
+    settings.trusted-users = [ "root" "gareth" ];
   };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = unstable.linuxPackages_latest;
-  boot.kernelParams = [ "nomodeset" ];
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelParams = [ "module_blacklist=i915" ];
 
   networking.hostName = "bandit"; # Define your hostname.
 
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking.useDHCP = false;
-  networking.interfaces.enp0s31f6.useDHCP = true;
-  networking.interfaces.wlp82s0.useDHCP = true;
+  hardware.opengl.enable = true;
+  hardware.opengl.driSupport = true;
+  hardware.opengl.driSupport32Bit = true;
+  hardware.enableRedistributableFirmware = true;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    modesetting.enable = true;
+    powerManagement.enable = true;
+    prime = {
+      offload.enable = true;
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:3:0:0";
+    };
+  };
+
 
   # Select internationalisation properties.
   i18n = {
@@ -97,9 +92,6 @@ in
           '';
         };
       })
-
-      # gnome extentions
-      gnomeExtensions.frippery-applications-menu
     ];
 
     gnome = {
@@ -127,8 +119,7 @@ in
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-
+  # hardware.pulseaudio.package = pkgs.pulseaudioFull;
 
   services.autorandr.enable = true;
 
@@ -138,7 +129,7 @@ in
     xkbOptions = "eurosign:e";
 
     # Video
-    videoDrivers = [ "nvidia" "displaylink" "modesetting" ];
+    videoDrivers = [ "nvidia" "displaylink" ];
 
     libinput = {
       enable = true;
