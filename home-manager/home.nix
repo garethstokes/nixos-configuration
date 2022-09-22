@@ -335,6 +335,8 @@ in
         color7  = "#f0f1ce";
         color15 = "#fefff0";
 
+        copy_on_select = true;
+
       };
     };
 

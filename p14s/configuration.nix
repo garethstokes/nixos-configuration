@@ -194,7 +194,7 @@ in
   # Accepts connections on 127.0.0.1 with "postgres" user
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_10;
+    package = pkgs.postgresql_14;
     authentication = pkgs.lib.mkForce ''
       # TYPE  DATABASE        USER            ADDRESS                 METHOD
       local   all             all                                     trust
@@ -202,7 +202,8 @@ in
       host    all             all             ::1/128                 trust
     '';
     initialScript = pkgs.writeText "backend-initScript" ''
-      CREATE ROLE gareth WITH SUPERUSER;
+      CREATE USER gareth WITH 
+        LOGIN SUPERUSER INHERIT CREATEDB CREATEROLE REPLICATION;
     '';
   };
 
