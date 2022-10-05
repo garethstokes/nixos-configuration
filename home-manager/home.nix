@@ -133,10 +133,13 @@ in
         set colorcolumn=80
         set mouse=a
         syntax enable
-        colorscheme tender
         set clipboard=unnamed
         filetype plugin indent on
         set cmdheight=2
+
+        " make it look pretty
+        colorscheme tender
+        hi CocMenuSel ctermfg=black ctermbg=185
 
         " Some servers have issues with backup files, see #649.
         set nobackup
