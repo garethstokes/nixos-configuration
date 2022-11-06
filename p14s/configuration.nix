@@ -202,15 +202,15 @@ in
       host    all             all             ::1/128                 trust
     '';
     initialScript = pkgs.writeText "backend-initScript" ''
-      CREATE USER gareth WITH 
-        LOGIN SUPERUSER INHERIT CREATEDB CREATEROLE REPLICATION;
+      mkdir -p /var/log/postgresql
     '';
     settings = {
       log_connections = true;
       log_statement = "all";
       logging_collector = true;
       log_disconnections = true;
-      log_destination = pkgs.lib.mkForce "syslog";
+      log_destination = pkgs.lib.mkForce "stderr";
+      log_directory = "/var/log/postgresql";
     };
   };
 
