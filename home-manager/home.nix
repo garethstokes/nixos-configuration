@@ -14,6 +14,9 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  # disable manual-combined for now
+  manual.manpages.enable = false;
+
   home.file = {
     ".ssh/id_rsa".source = ~/keys/id_rsa;
     ".ssh/id_rsa.pub".source = ~/keys/id_rsa.pub;
