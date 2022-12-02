@@ -55,6 +55,7 @@ in
     gobang
     dbeaver
     nodejs
+    wl-clipboard
   ];
 
   programs = {
@@ -236,6 +237,9 @@ in
 
         " Run the Code Lens action on the current line.
         nmap <leader>cl  <Plug>(coc-codelens-action)
+
+        " Copy to the paste buffer
+        noremap <leader>y "+y
 
         " Map function and class text objects
         " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
