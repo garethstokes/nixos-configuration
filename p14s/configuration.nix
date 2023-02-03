@@ -97,6 +97,7 @@ in
     systemPackages = with pkgs; [
       wget
       nvidia-offload
+      home-manager
 
       # basic vim base install
       (neovim.override {
