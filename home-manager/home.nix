@@ -118,6 +118,12 @@ in
               "args" = ["--lsp"];
               "rootPatterns" = ["*.cabal" "cabal.project" "hie.yaml"];
               "filetypes" = ["haskell" "lhaskell"];
+              "settings" = {
+                "haskell" = {
+                  "checkProject" = false;
+                  "formattingProvider" = "fourmolu";
+                };
+              };
             };
             "metals" = {
               "command" = "metals-vim";
@@ -307,7 +313,7 @@ in
     alacritty = {
       enable = true;
       settings = {
-        font_size = "12";
+        font_size = "14";
       };
     };
 
@@ -315,10 +321,10 @@ in
       enable = true;
       font = {
         package = pkgs.fira-code;
-        name = "ubuntu-mono";
+        name = "Fira Code";
       };
       settings = {
-        font_size = "12";
+        font_size = "16";
 
         background = "#000000";
         foreground = "#ecefc1";
@@ -385,7 +391,7 @@ in
       sessionVariables = {
         EDITOR = "vim";
         ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=10";
-        NIX_PATH = "/home/gareth/.nix-defexpr/channels:$NIX_PATH";
+        NIX_PATH = "home-manager=https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz:/home/gareth/.nix-defexpr/channels:$NIX_PATH";
       };
     };
 

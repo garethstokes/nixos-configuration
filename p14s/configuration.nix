@@ -97,7 +97,6 @@ in
     systemPackages = with pkgs; [
       wget
       nvidia-offload
-      home-manager
 
       # basic vim base install
       (neovim.override {
@@ -174,7 +173,6 @@ in
 
     # Enable the Gnome Desktop Environment.
     displayManager = {
-      defaultSession = "gnome";
       gdm = {
         enable = true;
         wayland = true;
