@@ -31,7 +31,7 @@ in
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_6_1_hardened;
   # boot.kernelParams = [ "module_blacklist=i915" ];
 
   networking.hostName = "bandit"; # Define your hostname.
