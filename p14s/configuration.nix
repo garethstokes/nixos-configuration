@@ -32,7 +32,12 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_6_1_hardened;
+  boot.kernelModules = ["i2c-dev"];
   # boot.kernelParams = [ "module_blacklist=i915" ];
+
+  # make chomrium / electron apps work
+  boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 1;
+  security.allowUserNamespaces = true;
 
   networking.hostName = "bandit"; # Define your hostname.
 
@@ -42,7 +47,7 @@ in
   hardware.enableRedistributableFirmware = true;
 
   hardware.nvidia = {
-    # package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+    # package = config.boot.kernelPackages.nvidiaPackages.beta;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     # open = true;
 
@@ -88,6 +93,7 @@ in
     systemPackages = with pkgs; [
       wget
       nvidia-offload
+      screenfetch
 
       # basic vim base install
       (neovim.override {
@@ -139,6 +145,12 @@ in
   # hardware.pulseaudio.package = pkgs.pulseaudioFull;
 
   services.autorandr.enable = true;
+
+  # antivirus for comliance
+  services.clamav = {
+    daemon.enable = true;
+    updater.enable = true;
+  };
 
   services.xserver = {
     enable = true;
