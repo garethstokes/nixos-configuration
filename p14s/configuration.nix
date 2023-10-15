@@ -70,7 +70,7 @@ in
     defaultLocale = "en_US.UTF-8";
   };
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     fira-code
     fira-code-symbols
   ];
@@ -94,6 +94,8 @@ in
       wget
       nvidia-offload
       screenfetch
+      virt-manager
+      ddcutil
 
       # basic vim base install
       (neovim.override {
@@ -141,8 +143,11 @@ in
 
   # Enable sound.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
-  # hardware.pulseaudio.package = pkgs.pulseaudioFull;
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+  };
+  hardware.bluetooth.enable = true;
 
   services.autorandr.enable = true;
 
@@ -191,6 +196,16 @@ in
     };
   };
 
+  programs = {
+    zsh.enable = true;
+
+    # adjust screen brightness
+    light.enable = true;
+
+    # used by virt-manager
+    dconf.enable = true;
+  };
+
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
@@ -199,6 +214,8 @@ in
       isNormalUser = true;
       extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
     };
+
+    extraGroups.vboxusers.members = [ "gareth" ];
   };
 
   # PostgreSQL server for development purposes.
@@ -226,10 +243,10 @@ in
   };
 
   # Docker
-  virtualisation.docker.enable = true;
-
-  # adjust screen brightness
-  programs.light.enable = true;
+  virtualisation = {
+    docker.enable = true;
+    libvirtd.enable = true;
+  };
 
   # Power
   services.power-profiles-daemon.enable = false;

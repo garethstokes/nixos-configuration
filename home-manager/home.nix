@@ -44,7 +44,13 @@ in
 
   home.sessionVariables = {
     MOZ_ENABLE_WAYLAND = 1;
+    NIX_PATH = "$NIX_PATH:/home/gareth/.nix-defexpr/channels";
   };
+
+  #Add support for ./local/bin
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
 
   home.packages = with pkgs; [
     spotify
@@ -56,6 +62,8 @@ in
     dbeaver
     nodejs
     wl-clipboard
+    ripgrep
+    vlc
   ];
 
   programs = {
@@ -102,11 +110,16 @@ in
         nerdtree
         vim-fugitive
         elm-vim
-        # coc-nvim
         vim-ormolu
         vim-cabalfmt
         vim-terraform
         vim-elixir
+
+        telescope-nvim
+        nvim-treesitter
+        telescope_hoogle
+        flash-nvim
+
       ];
 
       coc = {
@@ -306,6 +319,12 @@ in
         let g:ormolu_options=["-o -XTypeApplications"]
 
         let g:terraform_fmt_on_save=1
+
+        " Telescope
+        nnoremap <leader>ff <cmd>Telescope find_files<cr>
+        nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+        nnoremap <leader>fb <cmd>Telescope buffers<cr>
+        nnoremap <leader>fh <cmd>Telescope help_tags<cr>
       '';
 
     };
