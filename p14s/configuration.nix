@@ -2,16 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
-let
-  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
-    export __NV_PRIME_RENDER_OFFLOAD=1
-    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-    export __GLX_VENDOR_LIBRARY_NAME=nvidia
-    export __VK_LAYER_NV_optimus=NVIDIA_only
-    exec "$@"
-  '';
-in
+{ config, pkgs, username, hostname, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -29,17 +20,22 @@ in
   };
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_6_1_hardened;
-  boot.kernelModules = ["i2c-dev"];
-  # boot.kernelParams = [ "module_blacklist=i915" ];
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    kernelModules = ["i2c-dev"];
 
-  # make chomrium / electron apps work
-  boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 1;
-  security.allowUserNamespaces = true;
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
 
-  networking.hostName = "bandit"; # Define your hostname.
+      grub = {
+        efiSupport = true;
+        device = "nodev";
+      };
+    };
+  }; 
+
+  networking.hostName = hostname; # Define your hostname.
 
   hardware.opengl.enable = true;
   hardware.opengl.driSupport = true;
@@ -70,10 +66,14 @@ in
     defaultLocale = "en_US.UTF-8";
   };
 
-  fonts.packages = with pkgs; [
-    fira-code
-    fira-code-symbols
-  ];
+  fonts = {
+    # enableDefaultPackages = true;
+    packages = with pkgs; [
+      fira-code
+      fira-code-symbols
+      font-awesome
+    ];
+  };
 
   console = {
     font = "Lat2-Terminus16";
@@ -90,12 +90,14 @@ in
       EDITOR = "vim";
     };
 
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+    };
+
     systemPackages = with pkgs; [
       wget
-      nvidia-offload
-      screenfetch
-      virt-manager
       ddcutil
+      home-manager
 
       # basic vim base install
       (neovim.override {
@@ -127,17 +129,20 @@ in
         cheese # webcam tool
         gnome-music
         gnome-terminal
-        gedit # text editor
-        epiphany # web browser
-        geary # email reader
         evince # document viewer
         gnome-characters
         totem # video player
-        tali # poker game
-        iagno # go game
-        hitori # sudoku game
-        atomix # puzzle game
       ]);
+    };
+  };
+
+  xdg = {
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        # xdg-desktop-portal-gtk
+      ];
     };
   };
 
@@ -147,20 +152,28 @@ in
     enable = true;
     package = pkgs.pulseaudioFull;
   };
-  hardware.bluetooth.enable = true;
+
+  # bluetooth
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings.General.Experimental = true; # for gnome-bluetooth percentage
+    settings.General.ControllerMode = "bredr";
+
+  };
 
   services.autorandr.enable = true;
 
   # antivirus for comliance
-  services.clamav = {
-    daemon.enable = true;
-    updater.enable = true;
-  };
+  # services.clamav = {
+  #   daemon.enable = true;
+  #   updater.enable = true;
+  # };
 
   services.xserver = {
     enable = true;
-    layout = "us";
-    xkbOptions = "eurosign:e";
+    xkb.layout = "us";
+    xkb.options = "eurosign:e";
 
     # Video
     videoDrivers = [ "nvidia" "displaylink" ];
@@ -185,10 +198,10 @@ in
         enable = true;
         wayland = true;
       };
-      autoLogin = {
-        enable = true;
-        user = "gareth";
-      };
+      # autoLogin = {
+      #   enable = true;
+      #   user = "gareth";
+      # };
     };
 
     desktopManager.gnome = {
@@ -201,21 +214,17 @@ in
 
     # adjust screen brightness
     light.enable = true;
-
-    # used by virt-manager
-    dconf.enable = true;
   };
-
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
     defaultUserShell = pkgs.zsh;
-    users.gareth = {
+    users."${username}" = {
       isNormalUser = true;
       extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
     };
 
-    extraGroups.vboxusers.members = [ "gareth" ];
+    extraGroups.vboxusers.members = [ "${username}" ];
   };
 
   # PostgreSQL server for development purposes.

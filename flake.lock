@@ -1,0 +1,62 @@
+{
+  "nodes": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1710349883,
+        "narHash": "sha256-bjbdS2mC76xNJwt1d/uZa+JdHR8CCyYbF4Ey/NgOJus=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "2f0db7d418e781354d8a3c50e611e3b1cd413087",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "more-waita": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706758996,
+        "narHash": "sha256-+xvRSsGc7ERFxiTj1HT7G29OCQkR0nUZ6+WN03D3AEQ=",
+        "type": "tarball",
+        "url": "https://github.com/somepaulo/MoreWaita/archive/refs/heads/main.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/somepaulo/MoreWaita/archive/refs/heads/main.zip"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1710272261,
+        "narHash": "sha256-g0bDwXFmTE7uGDOs9HcJsfLFhH7fOsASbAuOzDC+fhQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "0ad13a6833440b8e238947e47bea7f11071dc2b2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "more-waita": "more-waita",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
