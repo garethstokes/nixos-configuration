@@ -47,42 +47,5 @@
     zip
     unzip
     glib
-
-    # hyprland
-    wl-gammactl
-    wl-clipboard
-    wf-recorder
-    hyprpicker
-    wayshot
-    swappy
-    slurp
-    imagemagick
-    pavucontrol
-    brightnessctl
-    swww
-
-    # fun
-    fortune
-    jp2a
-    pywal
-    glow
-    vhs
-    gum
-    slides
-    charm
-    skate
-    yabridge
-    yabridgectl
-    wine-staging
-    distrobox
-
-    # langs
-    nodejs
-    go
-    bun
-    sassc
-    typescript
-    ninja
-    eslint
   ];
 }
