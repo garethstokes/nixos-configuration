@@ -7,14 +7,12 @@ return {
     opts = {
       servers = {
         bashls = {},
-        cssls = {},
-        eslint = {},
-        stylelint_lsp = {},
-        html = {},
-        tsserver = {},
-        marksman = {},
-        nil_ls = {},
-        terraformls = {},
+        html = {}, -- html
+        tailwindcss = {}, -- tailwind
+        tsserver = {}, -- typescript
+        marksman = {}, -- markdown
+        nil_ls = {}, -- nix
+        terraformls = {}, -- terraform
 
         -- https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/hls.lua
         hls = { 

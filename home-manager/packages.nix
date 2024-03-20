@@ -47,5 +47,7 @@
     zip
     unzip
     glib
+    lazygit
+    tailwindcss-language-server
   ];
 }
