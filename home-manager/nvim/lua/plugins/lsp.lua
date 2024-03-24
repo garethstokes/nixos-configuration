@@ -13,6 +13,7 @@ return {
         marksman = {}, -- markdown
         nil_ls = {}, -- nix
         terraformls = {}, -- terraform
+        prismals = {}, -- prisma ORM
 
         -- https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/hls.lua
         hls = { 

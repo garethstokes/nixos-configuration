@@ -76,4 +76,5 @@ return {
       end
     end,
   },
+  { "prisma/vim-prisma" }
 }

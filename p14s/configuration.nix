@@ -46,6 +46,7 @@
     # package = config.boot.kernelPackages.nvidiaPackages.beta;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     # open = true;
+    nvidiaSettings = false;
 
     modesetting.enable = true;
 
@@ -54,6 +55,7 @@
 
     prime = {
       offload.enable = true;
+      offload.enableOffloadCmd = true;
       # sync.enable = true;
       intelBusId = "PCI:0:2:0";
       nvidiaBusId = "PCI:3:0:0";
@@ -214,6 +216,8 @@
 
     # adjust screen brightness
     light.enable = true;
+
+    dconf.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -255,12 +259,18 @@
   virtualisation = {
     docker.enable = true;
     libvirtd.enable = true;
+    podman.enable = true;
   };
 
   # Power
   services.power-profiles-daemon.enable = false;
   services.logind = {
     lidSwitch = "ignore";
+    extraConfig = ''
+      HandlePowerKey=ignore
+      HandleLidSwitch=suspend
+      HandleLidSwitchExternalPower=ignore
+    '';
   };
 
   # firmware updater
