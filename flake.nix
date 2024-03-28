@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -15,11 +16,16 @@
     };
   };
 
-  outputs = { home-manager, nixpkgs, ... }@inputs:
+  outputs = { home-manager, nixpkgs, nixpkgs-master, ... }@inputs:
   let
     username = "gareth";
     hostname = "bandit";
     system = "x86_64-linux";
+
+    pkgs-master = import nixpkgs-master {
+      inherit system;
+      config.allowUnfree = true;
+    };
   in
   {
     nixosConfigurations."${hostname}" = nixpkgs.lib.nixosSystem {
@@ -32,7 +38,7 @@
         inherit system;
         config.allowUnfree = true;
       };
-      extraSpecialArgs = { inherit inputs username; };
+      extraSpecialArgs = { inherit inputs username pkgs-master; };
       modules = [ ./home-manager/home.nix ];
     };
   };

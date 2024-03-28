@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-master, ... }:
 {
   # hide entries
   xdg.desktopEntries = {
@@ -49,5 +49,8 @@
     glib
     lazygit
     tailwindcss-language-server
+
+    #devenv
+    pkgs-master.devenv
   ];
 }
