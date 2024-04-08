@@ -21,6 +21,8 @@
     viAlias = true;
     vimAlias = true;
 
+    catppuccin.enable = true;
+
     withRuby = true;
     withNodeJs = true;
     withPython3 = true;

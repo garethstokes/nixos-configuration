@@ -21,7 +21,7 @@ local diagnostic = {
 
 local filename = {
   "filename",
-  path = 0, -- set to 0 for just filename
+  path = 4, -- set to 0 for just filename
   symbols = {
       modified = "",
       readonly = "[ro]",
@@ -77,7 +77,7 @@ return {
           lualine_b = { "branch", diff },
           lualine_c = { filetype, filename },
           lualine_x = { "searchcount", "selectioncount" },
-          lualine_y = { trouble, diagnostic, encoding, "filesize" },
+          lualine_y = { diagnostic, encoding, "filesize" },
           lualine_z = { position },
         },
         extensions = { "neo-tree", "lazy" },

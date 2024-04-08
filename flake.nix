@@ -14,9 +14,12 @@
       url = "https://github.com/somepaulo/MoreWaita/archive/refs/heads/main.zip";
       flake = false;
     };
+
+    # pretty colours
+    catppuccin.url = "github:catppuccin/nix";
   };
 
-  outputs = { home-manager, nixpkgs, nixpkgs-master, ... }@inputs:
+  outputs = { home-manager, nixpkgs, nixpkgs-master, catppuccin, ... }@inputs:
   let
     username = "gareth";
     hostname = "bandit";
@@ -39,7 +42,10 @@
         config.allowUnfree = true;
       };
       extraSpecialArgs = { inherit inputs username pkgs-master; };
-      modules = [ ./home-manager/home.nix ];
+      modules = [ 
+        ./home-manager/home.nix
+        catppuccin.homeManagerModules.catppuccin
+      ];
     };
   };
 }

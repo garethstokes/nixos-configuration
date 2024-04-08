@@ -29,6 +29,8 @@ in
   #     warn-dirty = false;
   #   };
   # };
+  
+  catppuccin.flavour = "mocha";
 
   home = {
     inherit username homeDirectory;
