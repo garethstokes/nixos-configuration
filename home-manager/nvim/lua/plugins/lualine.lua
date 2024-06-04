@@ -35,17 +35,17 @@ local position = {
   padding = { left = 0, right = 1 },
 }
 
-local trouble = {
-  function() 
-    return require("trouble").statusLine({
-      mode = "lsp_document_symbols",
-      groups = {},
-      title = false,
-      filter = { range = true },
-      format = "{kind_icon}{symbol.name:Normal}",
-    })
-  end
-}
+-- local trouble = {
+--   function() 
+--     return require("trouble").statusLine({
+--       mode = "lsp_document_symbols",
+--       groups = {},
+--       title = false,
+--       filter = { range = true },
+--       format = "{kind_icon}{symbol.name:Normal}",
+--     })
+--   end
+-- }
 
 local filetype = {
   "fileformat",

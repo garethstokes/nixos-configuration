@@ -15,7 +15,6 @@
     # gui
     (mpv.override { scripts = [mpvScripts.mpris]; })
     libreoffice
-    spotify
     caprine-bin
     d-spy
     easyeffects
@@ -28,7 +27,13 @@
     icon-library
     dconf-editor
     slack
-    google-chrome
+    # temporary override while upstream fixes itself
+    (google-chrome.override {
+      commandLineArgs = [
+        "--enable-features=UseOzonePlatform"
+        "--ozone-platform=wayland"
+      ];
+    })
 
     # tools
     bat
@@ -52,5 +57,16 @@
 
     #devenv
     pkgs-master.devenv
+
+    # language servers 
+    marksman
+    lua-language-server
+    nodePackages.bash-language-server
+    tailwindcss-language-server
+    nil
+    terraform-lsp
+
+    # formatters
+    stylua
   ];
 }

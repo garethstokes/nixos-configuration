@@ -11,13 +11,14 @@ km("v", "J", ":m '>+1<CR>gv=gv")
 km("v", "K", ":m '<-2<CR>gv=gv")
 
 -- diagnostics
-km("n", "<leader>xx", vim.cmd.TroubleToggle, { desc = "TroubleToggle" })
-km(
-    "n",
-    "<leader>xw",
-    "<cmd>TroubleToggle workspace_diagnostics<cr>",
-    { desc = "TroubleToggle [W]orkspace" }
-)
+-- ENABLE THIS IF USING trouble.nvim
+-- km("n", "<leader>xx", vim.cmd.TroubleToggle, { desc = "TroubleToggle" })
+-- km(
+--     "n",
+--     "<leader>xw",
+--     "<cmd>TroubleToggle workspace_diagnostics<cr>",
+--     { desc = "TroubleToggle [W]orkspace" }
+-- )
 
 -- buffers
 km({ "n", "i", "v" }, "<A-l>", vim.cmd.bnext, { desc = "Switch to next Buffer" })

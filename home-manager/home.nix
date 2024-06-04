@@ -30,7 +30,7 @@ in
   #   };
   # };
   
-  catppuccin.flavour = "mocha";
+  catppuccin.flavor = "mocha";
 
   home = {
     inherit username homeDirectory;
@@ -46,6 +46,7 @@ in
     ];
   };
 
+  programs.spotify-player.enable = true;
   programs.home-manager.enable = true;
   home.stateVersion = "21.11";
 }

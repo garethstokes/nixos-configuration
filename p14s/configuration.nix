@@ -10,6 +10,7 @@
     ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
 
   nix = {
     package = pkgs.nixVersions.stable;
@@ -24,6 +25,9 @@
     kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = ["i2c-dev"];
 
+    # https://download.nvidia.com/XFree86/Linux-x86_64/435.17/README/powermanagement.html
+    # kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -37,19 +41,20 @@
 
   networking.hostName = hostname; # Define your hostname.
 
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport = true;
-  hardware.opengl.driSupport32Bit = true;
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
   hardware.enableRedistributableFirmware = true;
 
   hardware.nvidia = {
-    # package = config.boot.kernelPackages.nvidiaPackages.beta;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    # open = true;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    # package = config.boot.kernelPackages.nvidiaPackages.stable;
+    open = false;
     nvidiaSettings = false;
-
     modesetting.enable = true;
-
     powerManagement.enable = true;
     powerManagement.finegrained = true;
 
@@ -161,7 +166,6 @@
     powerOnBoot = true;
     settings.General.Experimental = true; # for gnome-bluetooth percentage
     settings.General.ControllerMode = "bredr";
-
   };
 
   services.autorandr.enable = true;
@@ -171,15 +175,9 @@
   #   daemon.enable = true;
   #   updater.enable = true;
   # };
+  
 
-  services.xserver = {
-    enable = true;
-    xkb.layout = "us";
-    xkb.options = "eurosign:e";
-
-    # Video
-    videoDrivers = [ "nvidia" "displaylink" ];
-
+  services = {
     libinput = {
       enable = true;
 
@@ -193,6 +191,15 @@
         middleEmulation = true;
       };
     };
+  };
+
+  services.xserver = {
+    enable = true;
+    xkb.layout = "us";
+    xkb.options = "eurosign:e";
+
+    # Video
+    videoDrivers = [ "nvidia" "displaylink" ];
 
     # Enable the Gnome Desktop Environment.
     displayManager = {
@@ -282,6 +289,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "20.03"; # Did you read the comment?
+  system.stateVersion = "22.05"; # Did you read the comment?
 
 }
