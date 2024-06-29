@@ -48,15 +48,15 @@ in
         recursive = true;
         source = "${nerdfonts}/share/fonts/truetype/NerdFonts";
       };
-      ".config/gtk-4.0/gtk.css" = {
-        text = ''
-          window.messagedialog .response-area > button,
-          window.dialog.message .dialog-action-area > button,
-          .background.csd{
-            border-radius: 0;
-          }
-        '';
-      };
+      # ".config/gtk-4.0/gtk.css" = {
+      #   text = ''
+      #     window.messagedialog .response-area > button,
+      #     window.dialog.message .dialog-action-area > button,
+      #     .background.csd{
+      #       border-radius: 0;
+      #     }
+      #   '';
+      # };
       ".local/share/icons/MoreWaita" = {
         source = "${moreWaita}/share/icons";
       };
@@ -71,7 +71,7 @@ in
 
   gtk = {
     enable = true;
-    font.name = "Ubuntu Nerd Font";
+  # font.name = "Ubuntu Nerd Font";
     theme.name = "adw-gtk3-dark";
     cursorTheme = {
       name = cursor-theme;

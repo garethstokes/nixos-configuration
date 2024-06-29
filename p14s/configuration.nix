@@ -50,8 +50,8 @@
   hardware.enableRedistributableFirmware = true;
 
   hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
-    # package = config.boot.kernelPackages.nvidiaPackages.stable;
+    # package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
     open = false;
     nvidiaSettings = false;
     modesetting.enable = true;

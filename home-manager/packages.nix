@@ -65,6 +65,7 @@
     tailwindcss-language-server
     nil
     terraform-lsp
+    ruff-lsp
 
     # formatters
     stylua
