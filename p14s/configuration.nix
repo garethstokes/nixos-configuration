@@ -261,6 +261,11 @@
     };
   };
 
+  services.ollama = {
+    enable = true;
+    acceleration = "cuda";
+  };
+
   # Docker
   virtualisation = {
     docker.enable = true;

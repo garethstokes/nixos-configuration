@@ -1,4 +1,17 @@
 { pkgs, pkgs-master, ... }:
+let 
+  opencommit = pkgs.buildNpmPackage rec {
+    pname = "opencommit";
+    version = "3.0.16";
+    src = pkgs.fetchFromGitHub {
+      owner = "di-sukharev";
+      repo = "opencommit";
+      rev = "v${version}";
+      hash = "sha256-whzQrpwISZL5s6TYoDh8BraLjx52tE1DPFG0LNmsrZk=";
+    };
+    npmDepsHash = "sha256-Oq0WnIeEVJk84yH1hpZU45rKEYQZtKbFWeIrJ51p+ec=";
+  };
+in
 {
   # hide entries
   xdg.desktopEntries = {
@@ -54,6 +67,8 @@
     glib
     lazygit
     tailwindcss-language-server
+    opencommit
+    ollama
 
     #devenv
     pkgs-master.devenv
