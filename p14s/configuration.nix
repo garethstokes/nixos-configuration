@@ -131,13 +131,13 @@
       excludePackages = (with pkgs; [
         gnome-photos
         gnome-tour
-      ]) ++ (with pkgs.gnome; [
-        cheese # webcam tool
-        gnome-music
+        cheese # webcam
         gnome-terminal
-        evince # document viewer
-        gnome-characters
+        evince  # document viewer
         totem # video player
+      ]) ++ (with pkgs.gnome; [
+        gnome-music
+        gnome-characters
       ]);
     };
   };
@@ -153,7 +153,6 @@
   };
 
   # Enable sound.
-  sound.enable = true;
   hardware.pulseaudio = {
     enable = true;
     package = pkgs.pulseaudioFull;
