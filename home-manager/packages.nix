@@ -38,8 +38,10 @@ in
     bottles
     teams-for-linux
     icon-library
-    dconf-editor
+    pkgs.dconf-editor
     slack
+    evolution
+    dbeaver-bin
     # temporary override while upstream fixes itself
     (google-chrome.override {
       commandLineArgs = [

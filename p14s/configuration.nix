@@ -216,6 +216,9 @@
     };
   };
 
+  # gaming
+  programs.steam.enable = true;
+
   programs = {
     zsh.enable = true;
 
@@ -264,6 +267,17 @@
     enable = true;
     acceleration = "cuda";
   };
+
+  # printing 
+  services = {
+    printing.enable = true;
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
+  };
+
 
   # Docker
   virtualisation = {

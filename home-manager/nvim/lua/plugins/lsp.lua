@@ -14,8 +14,28 @@ return {
         nil_ls = {}, -- nix
         terraformls = {}, -- terraform
         prismals = {}, -- prisma ORM
-        pyright = {}, -- python
-        ruff = {}, -- python
+        pyright = {
+          settings = {
+            pyright = {
+              disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                ignore = { "*" },
+              },
+            },
+          },
+        }, -- python
+        ruff_lsp = {
+          init_options = {
+            settings = {
+              args = { "--preview" },
+              format = {
+                args = { "--line-length=80" },
+              },
+            },
+          },
+        }, -- python
 
         -- https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/hls.lua
         hls = {
