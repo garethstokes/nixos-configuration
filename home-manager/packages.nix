@@ -36,7 +36,8 @@ in
     transmission_4-gtk
     discord
     bottles
-    teams-for-linux
+    # commenting out due to a insecure dependency on electron
+    # teams-for-linux
     icon-library
     pkgs.dconf-editor
     slack
